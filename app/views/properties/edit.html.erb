@@ -1,6 +1,68 @@
 <h1>Editing Property</h1>
 
-<%= render 'form', property: @property %>
+<%= form_for @property do |form| %>
+  <% if @property.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@property.errors.count, "error") %> prohibited this property from being saved:</h2>
+
+      <ul>
+        <% @property.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :property_name %>
+    <%= form.text_area :property_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rent %>
+    <%= form.number_field :rent %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_age %>
+    <%= form.number_field :building_age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :remarks %>
+    <%= form.text_area :remarks %>
+  </div>
+
+  <% count = 0 %>
+
+  <%= form.fields_for :stations do |f| %>
+  　<% count = count + 1 %>
+  　<h2>Name of railway line <%= count %> </h2>
+  
+    <%= f.label :Name_of_railway_line %>
+    <%= f.text_field :railway %>
+
+    <%= f.label :Station_name %>
+    <%= f.text_field :station %>
+
+    <%= f.label :How_many_minutes_walk %>
+    <%= f.text_field :distance %>
+
+    <%= f.hidden_field :property_id %>
+  <% end %>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
 
 <%= link_to 'Show', @property %> |
 <%= link_to 'Back', properties_path %>

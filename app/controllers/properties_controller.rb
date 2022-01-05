@@ -8,15 +8,19 @@ class PropertiesController < ApplicationController
 
   # GET /properties/1 or /properties/1.json
   def show
+    @stations = Station.where(property_id: @property.id)
   end
 
   # GET /properties/new
   def new
     @property = Property.new
+    @property.stations.new
+    @property.stations.new
   end
 
   # GET /properties/1/edit
   def edit
+    @property.stations.new
   end
 
   # POST /properties or /properties.json
@@ -36,7 +40,14 @@ class PropertiesController < ApplicationController
 
   # PATCH/PUT /properties/1 or /properties/1.json
   def update
+
     respond_to do |format|
+      
+      @stations = Station.where(property_id: @property.id)
+      @stations.each do |station|
+        station.destroy
+      end
+
       if @property.update(property_params)
         format.html { redirect_to @property, notice: "Property was successfully updated." }
         format.json { render :show, status: :ok, location: @property }
@@ -64,6 +75,17 @@ class PropertiesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def property_params
-      params.require(:property).permit(:property_name, :rent, :address, :building_age, :remarks)
+      params.require(:property).permit(
+        :property_name,
+        :rent,
+        :address,
+        :building_age,
+        :remarks,
+        stations_attributes: [
+          :railway,
+          :station,
+          :distance,
+          :property_id,
+      ])
     end
 end
